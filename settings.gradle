@@ -1,0 +1,3 @@
+rootProject.name = 'real-chess'
+
+include "chess-core"
