@@ -15,11 +15,16 @@ import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
 public final class Knight extends Piece {
 
-    public static Knight Nb = new Knight(BLACK);
-    public static Knight Nw = new Knight(WHITE);
-
     private Knight(Color color) {
         super(color);
+    }
+
+    public static Knight nb() {
+        return new Knight(BLACK);
+    }
+
+    public static Knight nw() {
+        return new Knight(WHITE);
     }
 
     @Override

@@ -10,8 +10,8 @@ import static matvey.realchess.board.Board.initialBoard;
 import static matvey.realchess.board.Move.eat;
 import static matvey.realchess.board.Move.basicMove;
 import static matvey.realchess.board.Square.square;
-import static matvey.realchess.board.piece.Rook.Rb;
-import static matvey.realchess.board.piece.Rook.Rw;
+import static matvey.realchess.board.piece.Rook.rb;
+import static matvey.realchess.board.piece.Rook.rw;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RookTest {
@@ -22,7 +22,7 @@ class RookTest {
 
         Stream.of("c8", "g4", "c3", "a4")
                 .map(Square::square)
-                .forEach(end -> assertThat(Rw.move(emptyBoard().set(start), start, end))
+                .forEach(end -> assertThat(rw().move(emptyBoard().set(start), start, end))
                         .hasValue(basicMove(start, end)));
     }
 
@@ -32,7 +32,7 @@ class RookTest {
 
         Stream.of("c8", "g6", "e3")
                 .map(Square::square)
-                .forEach(end -> assertThat(Rw.move(emptyBoard().set(start), start, end))
+                .forEach(end -> assertThat(rw().move(emptyBoard().set(start), start, end))
                         .isEmpty());
     }
 
@@ -41,7 +41,7 @@ class RookTest {
         var start = square("c5", "Rb");
         var end = square("h5", "Nw");
 
-        var move = Rb.move(emptyBoard().set(start).set(end), start, end);
+        var move = rb().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).hasValue(eat(start, end, end.piece()));
     }
@@ -51,7 +51,7 @@ class RookTest {
         var start = square("a1", "Rw");
         var end = square("a5");
 
-        var move = Rw.move(initialBoard(), start, end);
+        var move = rw().move(initialBoard(), start, end);
 
         assertThat(move).isEmpty();
     }

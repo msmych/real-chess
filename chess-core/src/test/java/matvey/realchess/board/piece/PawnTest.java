@@ -7,8 +7,8 @@ import static matvey.realchess.board.Board.initialBoard;
 import static matvey.realchess.board.Move.eat;
 import static matvey.realchess.board.Move.basicMove;
 import static matvey.realchess.board.Square.square;
-import static matvey.realchess.board.piece.Pawn.Pb;
-import static matvey.realchess.board.piece.Pawn.Pw;
+import static matvey.realchess.board.piece.Pawn.pb;
+import static matvey.realchess.board.piece.Pawn.pw;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PawnTest {
@@ -18,7 +18,7 @@ class PawnTest {
         var start = square("b2", "Pw");
         var end = square("b3");
 
-        var move = Pw.doMove(initialBoard(), start, end);
+        var move = pw().doMove(initialBoard(), start, end);
 
         assertThat(move).hasValue(basicMove(start, end));
     }
@@ -28,7 +28,7 @@ class PawnTest {
         var start = square("c2", "Pw");
         var end = square("d2");
 
-        var move = Pw.move(initialBoard(), start, end);
+        var move = pw().move(initialBoard(), start, end);
 
         assertThat(move).isEmpty();
     }
@@ -38,7 +38,7 @@ class PawnTest {
         var start = square("c2", "Pw");
         var end = square("c1");
 
-        var move = Pw.move(initialBoard(), start, end);
+        var move = pw().move(initialBoard(), start, end);
 
         assertThat(move).isEmpty();
     }
@@ -48,7 +48,7 @@ class PawnTest {
         var start = square("d5", "Pw");
         var end = square("d6");
 
-        var move = Pw.move(initialBoard(), start, end);
+        var move = pw().move(initialBoard(), start, end);
 
         assertThat(move).hasValue(basicMove(start, end));
     }
@@ -58,7 +58,7 @@ class PawnTest {
         var start = square("d2", "Pw");
         var end = square("d3", "Bb");
 
-        var move = Pw.move(emptyBoard().set(start).set(end), start, end);
+        var move = pw().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).isEmpty();
     }
@@ -68,7 +68,7 @@ class PawnTest {
         var start = square("e2", "Pw");
         var end = square("e3", "Nw");
 
-        var move = Pw.move(emptyBoard().set(start).set(end), start, end);
+        var move = pw().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).isEmpty();
     }
@@ -78,7 +78,7 @@ class PawnTest {
         var start = square("f7", "Pb");
         var end = square("f6");
 
-        var move = Pb.move(initialBoard(), start, end);
+        var move = pb().move(initialBoard(), start, end);
 
         assertThat(move).hasValue(basicMove(start, end));
     }
@@ -88,17 +88,17 @@ class PawnTest {
         var start = square("h2", "Pw");
         var end = square("h4");
 
-        var move = Pw.move(initialBoard(), start, end);
+        var move = pw().move(initialBoard(), start, end);
 
         assertThat(move).hasValue(basicMove(start, end));
     }
 
     @Test
     void white_pawn_should_not_move_h4h6() {
-        var start = square("h4", "Pw");
+        var start = square("h4").endMove(pw());
         var end = square("h6");
 
-        var move = Pw.move(emptyBoard().set(start).set(end), start, end);
+        var move = pw().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).isEmpty();
     }
@@ -109,7 +109,7 @@ class PawnTest {
         var rook = square("a3", "Rb");
         var end = square("a4");
 
-        var move = Pw.move(emptyBoard().set(rook).set(start).set(end), start, end);
+        var move = pw().move(emptyBoard().set(rook).set(start).set(end), start, end);
 
         assertThat(move).isEmpty();
     }
@@ -119,9 +119,9 @@ class PawnTest {
         var start = square("f4", "Pw");
         var end = square("e5", "Pb");
 
-        var move = Pw.move(emptyBoard().set(start).set(end), start, end);
+        var move = pw().move(emptyBoard().set(start).set(end), start, end);
 
-        assertThat(move).hasValue(eat(start, end, Pb));
+        assertThat(move).hasValue(eat(start, end, end.piece()));
     }
 
     @Test
@@ -129,7 +129,7 @@ class PawnTest {
         var start = square("a3", "Pw");
         var end = square("b4", "Rw");
 
-        var move = Pw.move(emptyBoard().set(start).set(end), start, end);
+        var move = pw().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).isEmpty();
     }
@@ -140,7 +140,7 @@ class PawnTest {
         var passant = square("e5", "Pb");
         var end = square("e6");
 
-        var move = Pw.move(emptyBoard().set(start).passant(passant), start, end);
+        var move = pw().move(emptyBoard().set(start).passant(passant), start, end);
 
         assertThat(move).hasValue(eat(start, end, passant.piece()));
     }
@@ -150,7 +150,7 @@ class PawnTest {
         var start = square("a4", "Pb");
         var end = square("b3", "Nw");
 
-        var move = Pb.move(emptyBoard().set(start).set(end), start, end);
+        var move = pb().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).hasValue(eat(start, end, end.piece()));
     }
@@ -161,7 +161,7 @@ class PawnTest {
         var passant = square("g4", "Pw");
         var end = square("g3");
 
-        var move = Pb.move(emptyBoard().set(start).passant(passant), start, end);
+        var move = pb().move(emptyBoard().set(start).passant(passant), start, end);
 
         assertThat(move).hasValue(eat(start, end, passant.piece()));
     }
@@ -172,7 +172,7 @@ class PawnTest {
         var passant = square("c5", "Pb");
         var end = square("c6");
 
-        var move = Pb.move(emptyBoard().set(start).passant(passant), start, end);
+        var move = pb().move(emptyBoard().set(start).passant(passant), start, end);
 
         assertThat(move).isEmpty();
     }

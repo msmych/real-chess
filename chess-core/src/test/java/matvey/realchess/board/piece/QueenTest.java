@@ -9,8 +9,8 @@ import static matvey.realchess.board.Board.emptyBoard;
 import static matvey.realchess.board.Move.eat;
 import static matvey.realchess.board.Move.basicMove;
 import static matvey.realchess.board.Square.square;
-import static matvey.realchess.board.piece.Queen.Qb;
-import static matvey.realchess.board.piece.Queen.Qw;
+import static matvey.realchess.board.piece.Queen.qb;
+import static matvey.realchess.board.piece.Queen.qw;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class QueenTest {
@@ -21,7 +21,7 @@ class QueenTest {
 
         Stream.of("g8", "e4", "a2", "b7", "d6", "h5", "d3", "a5")
                 .map(Square::square)
-                .forEach(end -> assertThat(Qw.move(emptyBoard().set(start), start, end))
+                .forEach(end -> assertThat(qw().move(emptyBoard().set(start), start, end))
                         .hasValue(basicMove(start, end)));
     }
 
@@ -31,7 +31,7 @@ class QueenTest {
 
         Stream.of("f8", "g4", "a3")
                 .map(Square::square)
-                .forEach(end -> assertThat(Qb.move(emptyBoard().set(start), start, end))
+                .forEach(end -> assertThat(qb().move(emptyBoard().set(start), start, end))
                         .isEmpty());
     }
 
@@ -40,7 +40,7 @@ class QueenTest {
         var start = square("b5", "Qb");
         var end = square("e2", "Pw");
 
-        var move = Qb.move(emptyBoard().set(start).set(end), start, end);
+        var move = qb().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).hasValue(eat(start, end, end.piece()));
     }
@@ -51,7 +51,7 @@ class QueenTest {
         var knight = square("d3", "Nb");
         var end = square("c2");
 
-        var move = Qb.move(emptyBoard().set(start).set(knight), start, end);
+        var move = qb().move(emptyBoard().set(start).set(knight), start, end);
 
         assertThat(move).isEmpty();
     }

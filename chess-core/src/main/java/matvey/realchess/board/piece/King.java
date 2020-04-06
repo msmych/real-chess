@@ -14,11 +14,16 @@ import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
 public final class King extends Piece {
 
-    public static King Kw = new King(WHITE);
-    public static King Kb = new King(BLACK);
-
     private King(Color color) {
         super(color);
+    }
+
+    public static King kb() {
+        return new King(BLACK);
+    }
+
+    public static King kw() {
+        return new King(WHITE);
     }
 
     @Override
@@ -30,4 +35,5 @@ public final class King extends Piece {
         }
         return empty();
     }
+
 }

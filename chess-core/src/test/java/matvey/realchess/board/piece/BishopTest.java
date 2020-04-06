@@ -10,8 +10,8 @@ import static matvey.realchess.board.Board.initialBoard;
 import static matvey.realchess.board.Move.eat;
 import static matvey.realchess.board.Move.basicMove;
 import static matvey.realchess.board.Square.square;
-import static matvey.realchess.board.piece.Bishop.Bb;
-import static matvey.realchess.board.piece.Bishop.Bw;
+import static matvey.realchess.board.piece.Bishop.bb;
+import static matvey.realchess.board.piece.Bishop.bw;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BishopTest {
@@ -22,7 +22,7 @@ class BishopTest {
 
         Stream.of("g8", "e4", "a2", "b7")
                 .map(Square::square)
-                .forEach(end -> assertThat(Bw.move(emptyBoard().set(start), start, end))
+                .forEach(end -> assertThat(bw().move(emptyBoard().set(start), start, end))
                         .hasValue(basicMove(start, end)));
     }
 
@@ -32,7 +32,7 @@ class BishopTest {
 
         Stream.of("g4", "e8", "d3")
                 .map(Square::square)
-                .forEach(end -> assertThat(Bishop.Bb.move(emptyBoard().set(start), start, end))
+                .forEach(end -> assertThat(bb().move(emptyBoard().set(start), start, end))
                         .isEmpty());
     }
 
@@ -41,7 +41,7 @@ class BishopTest {
         var start = square("b5", "Bw");
         var end = square("d7", "Pb");
 
-        var move = Bw.move(emptyBoard().set(start).set(end), start, end);
+        var move = bw().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).hasValue(eat(start, end, end.piece()));
     }
@@ -51,7 +51,7 @@ class BishopTest {
         var start = square("c8", "Bb");
         var end = square("g4");
 
-        var move = Bb.move(initialBoard(), start, end);
+        var move = bb().move(initialBoard(), start, end);
 
         assertThat(move).isEmpty();
     }

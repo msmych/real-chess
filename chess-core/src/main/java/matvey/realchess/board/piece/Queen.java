@@ -14,11 +14,16 @@ import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
 public final class Queen extends Piece {
 
-    public static Queen Qw = new Queen(WHITE);
-    public static Queen Qb = new Queen(BLACK);
-
     private Queen(Color color) {
         super(color);
+    }
+
+    public static Queen qb() {
+        return new Queen(BLACK);
+    }
+
+    public static Queen qw() {
+        return new Queen(WHITE);
     }
 
     @Override
@@ -30,4 +35,5 @@ public final class Queen extends Piece {
         }
         return empty();
     }
+
 }

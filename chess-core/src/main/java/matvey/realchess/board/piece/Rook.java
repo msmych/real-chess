@@ -14,11 +14,16 @@ import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
 public final class Rook extends Piece {
 
-    public static Rook Rw = new Rook(WHITE);
-    public static Rook Rb = new Rook(BLACK);
-
     private Rook(Color color) {
         super(color);
+    }
+
+    public static Rook rb() {
+        return new Rook(BLACK);
+    }
+
+    public static Rook rw() {
+        return new Rook(WHITE);
     }
 
     @Override
@@ -30,4 +35,5 @@ public final class Rook extends Piece {
         }
         return empty();
     }
+
 }

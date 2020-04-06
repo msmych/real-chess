@@ -14,11 +14,16 @@ import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
 public final class Bishop extends Piece {
 
-    public static Bishop Bb = new Bishop(BLACK);
-    public static Bishop Bw = new Bishop(WHITE);
-
     private Bishop(Color color) {
         super(color);
+    }
+
+    public static Bishop bb() {
+        return new Bishop(BLACK);
+    }
+
+    public static Bishop bw() {
+        return new Bishop(WHITE);
     }
 
     @Override
@@ -30,6 +35,5 @@ public final class Bishop extends Piece {
         }
         return empty();
     }
-
 
 }

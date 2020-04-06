@@ -15,11 +15,16 @@ import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
 public final class Pawn extends Piece {
 
-    public static Pawn Pb = new Pawn(BLACK);
-    public static Pawn Pw = new Pawn(WHITE);
-
     private Pawn(Color color) {
         super(color);
+    }
+
+    public static Pawn pb() {
+        return new Pawn(BLACK);
+    }
+
+    public static Pawn pw() {
+        return new Pawn(WHITE);
     }
 
     @Override
@@ -60,17 +65,10 @@ public final class Pawn extends Piece {
     }
 
     private Optional<Move> advanceTwo(Board board, Square start, Square end) {
-        if (!isInitial(start) || pieceOnTheWay(board, start, end) || end.piece().isPresent()) {
+        if (!start.initialForPiece() || pieceOnTheWay(board, start, end) || end.piece().isPresent()) {
             return empty();
         }
         return Optional.of(basicMove(start, end));
-    }
-
-    private boolean isInitial(Square square) {
-        return switch (color) {
-            case WHITE -> square.rank() == '2';
-            case BLACK -> square.rank() == '7';
-        };
     }
 
     private boolean pieceOnTheWay(Board board, Square start, Square end) {
