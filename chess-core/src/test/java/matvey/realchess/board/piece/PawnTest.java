@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static matvey.realchess.board.Board.emptyBoard;
 import static matvey.realchess.board.Board.initialBoard;
-import static matvey.realchess.board.Move.eat;
-import static matvey.realchess.board.Move.basicMove;
+import static matvey.realchess.board.Move.*;
 import static matvey.realchess.board.Square.square;
 import static matvey.realchess.board.piece.Pawn.pb;
 import static matvey.realchess.board.piece.Pawn.pw;
@@ -135,14 +134,14 @@ class PawnTest {
     }
 
     @Test
-    void white_pawn_should_eat_black_pawn_en_passant_d5e6() {
+    void d5e6_white_pawn_should_eat_black_pawn_en_passant() {
         var start = square("d5", "Pw");
-        var passant = square("e5", "Pb");
+        var passant = square("e5").endMove(pb());
         var end = square("e6");
 
         var move = pw().move(emptyBoard().set(start).passant(passant), start, end);
 
-        assertThat(move).hasValue(eat(start, end, passant.piece()));
+        assertThat(move).hasValue(enPassant(start, end, passant.piece().orElseThrow()));
     }
 
     @Test
@@ -156,14 +155,14 @@ class PawnTest {
     }
 
     @Test
-    void black_pawn_should_eat_white_pawn_en_passant_f4g3() {
+    void f4g3_black_pawn_should_eat_white_pawn_en_passant() {
         var start = square("f4", "Pb");
-        var passant = square("g4", "Pw");
+        var passant = square("g4").endMove(pw());
         var end = square("g3");
 
         var move = pb().move(emptyBoard().set(start).passant(passant), start, end);
 
-        assertThat(move).hasValue(eat(start, end, passant.piece()));
+        assertThat(move).hasValue(enPassant(start, end, passant.piece().orElseThrow()));
     }
 
     @Test

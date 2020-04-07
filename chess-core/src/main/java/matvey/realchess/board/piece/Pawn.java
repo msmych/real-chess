@@ -8,8 +8,7 @@ import java.util.Optional;
 
 import static java.lang.Math.abs;
 import static java.util.Optional.empty;
-import static matvey.realchess.board.Move.basicMove;
-import static matvey.realchess.board.Move.eat;
+import static matvey.realchess.board.Move.*;
 import static matvey.realchess.board.piece.Piece.Color.BLACK;
 import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
@@ -34,7 +33,8 @@ public final class Pawn extends Piece {
                 return Optional.of(eat(start, end, end.piece()));
             }
             if (canEatEnPassant(board, start, end)) {
-                return Optional.of(eat(start, end, board.passant().flatMap(Square::piece)));
+                return Optional.of(enPassant(start, end,
+                        board.passant().flatMap(Square::piece).orElseThrow()));
             }
             return empty();
         }

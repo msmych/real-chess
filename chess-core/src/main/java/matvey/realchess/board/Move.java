@@ -5,8 +5,7 @@ import matvey.realchess.board.piece.Piece;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
-import static matvey.realchess.board.Move.Type.BASIC;
-import static matvey.realchess.board.Move.Type.CASTLING;
+import static matvey.realchess.board.Move.Type.*;
 
 public record Move(Square start,
                    Square end,
@@ -29,7 +28,11 @@ public record Move(Square start,
         return new Move(start, end, CASTLING, empty());
     }
 
+    public static Move enPassant(Square start, Square end, Piece passant) {
+        return new Move(start, end, EN_PASSANT, Optional.of(passant));
+    }
+
     enum Type {
-        BASIC, CASTLING
+        BASIC, CASTLING, EN_PASSANT
     }
 }

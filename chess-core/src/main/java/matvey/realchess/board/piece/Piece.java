@@ -10,7 +10,7 @@ import static java.util.Optional.empty;
 
 public abstract class Piece {
 
-    final Color color;
+    protected final Color color;
 
     protected Piece(Color color) {
         this.color = color;
