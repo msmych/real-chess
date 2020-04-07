@@ -20,15 +20,12 @@ import static matvey.realchess.board.piece.Queen.qw;
 import static matvey.realchess.board.piece.Rook.rb;
 import static matvey.realchess.board.piece.Rook.rw;
 
-/**
- * <code>initialForPiece</code> —
- * <code>true</code> if piece is on its initial position
- */
 public record Square(char file,
                      char rank,
                      Color color,
-                     Optional<Piece>piece,
-                     boolean initialForPiece) {
+                     Optional<PieceInfo>pieceInfo) {
+
+    public record PieceInfo(Piece piece, boolean initial) {}
 
     public static Square square(String position) {
         return square(position, "..");
@@ -39,7 +36,7 @@ public record Square(char file,
     }
 
     public static Square square(char file, char rank, String piece) {
-        return new Square(file, rank, color(file, rank), piece(piece), true);
+        return new Square(file, rank, color(file, rank), piece(piece).map(p -> new PieceInfo(p, true)));
     }
 
     private static Color color(char file, char rank) {
@@ -64,8 +61,12 @@ public record Square(char file,
         };
     }
 
+    public Optional<Piece> piece() {
+        return pieceInfo.map(PieceInfo::piece);
+    }
+
     public Square endMove(Piece piece) {
-        return new Square(file, rank, color, Optional.of(piece), false);
+        return new Square(file, rank, color, Optional.of(new PieceInfo(piece, false)));
     }
 
     enum Color {

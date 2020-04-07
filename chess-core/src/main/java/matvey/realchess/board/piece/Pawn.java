@@ -65,7 +65,9 @@ public final class Pawn extends Piece {
     }
 
     private Optional<Move> advanceTwo(Board board, Square start, Square end) {
-        if (!start.initialForPiece() || pieceOnTheWay(board, start, end) || end.piece().isPresent()) {
+        if (!start.pieceInfo().map(Square.PieceInfo::initial).orElse(true) ||
+                pieceOnTheWay(board, start, end) ||
+                end.piece().isPresent()) {
             return empty();
         }
         return Optional.of(basicMove(start, end));
