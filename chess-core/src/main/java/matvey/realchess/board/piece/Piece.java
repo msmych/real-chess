@@ -23,10 +23,14 @@ public abstract class Piece {
         if (end.piece().map(piece -> piece.color == color).orElse(false)) {
             return empty();
         }
-        return doMove(board, start, end);
+        return pieceMove(board, start, end);
     }
 
-    abstract Optional<Move> doMove(Board board, Square start, Square end);
+    public abstract Optional<Move> pieceMove(Board board, Square start, Square end);
+
+    public final Color color() {
+        return color;
+    }
 
     protected final int rankDistance(Square start, Square end) {
         return switch (color) {
@@ -124,7 +128,7 @@ public abstract class Piece {
         return true;
     }
 
-    enum Color {
+    public enum Color {
         WHITE, BLACK
     }
 }

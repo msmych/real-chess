@@ -27,7 +27,7 @@ public final class Pawn extends Piece {
     }
 
     @Override
-    Optional<Move> doMove(Board board, Square start, Square end) {
+    public Optional<Move> pieceMove(Board board, Square start, Square end) {
         if (start.file() != end.file()) {
             if (canEat(start, end)) {
                 return Optional.of(eat(start, end, end.piece()));

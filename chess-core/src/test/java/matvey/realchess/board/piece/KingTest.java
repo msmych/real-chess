@@ -13,6 +13,7 @@ import static matvey.realchess.board.Move.eat;
 import static matvey.realchess.board.Square.square;
 import static matvey.realchess.board.piece.King.kb;
 import static matvey.realchess.board.piece.King.kw;
+import static matvey.realchess.board.piece.Knight.nw;
 import static matvey.realchess.board.piece.Rook.rb;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -79,6 +80,17 @@ class KingTest {
     }
 
     @Test
+    void e1b1_white_king_should_not_castle() {
+        var start = square("e1", "Kw");
+        var rook = square("a1", "Rw");
+        var end = square("b1");
+
+        var move = kw().move(emptyBoard().set(start).set(rook), start, end);
+
+        assertThat(move).isEmpty();
+    }
+
+    @Test
     void e1g1_white_king_should_not_castle_if_no_rook_on_h1() {
         var start = square("e1", "Kw");
         var end = square("g1");
@@ -106,6 +118,59 @@ class KingTest {
         var end = square("c8");
 
         var move = kb().move(emptyBoard().set(start).set(rook), start, end);
+
+        assertThat(move).isEmpty();
+    }
+
+    @Test
+    void e8_black_king_should_not_castle_if_white_knight_on_b8_and_black_bishop_on_f8() {
+        var start = square("e8", "Kb");
+        var leftRook = square("a8", "Rb");
+        var rightRook = square("h8", "Rb");
+        var knight = square("b8").endMove(nw());
+        var bishop = square("f8", "Bb");
+        var leftEnd = square("c8");
+        var rightEnd = square("g8");
+
+        var leftMove = kb().move(emptyBoard().set(start).set(leftRook).set(rightRook).set(knight).set(bishop), start, leftEnd);
+        var rightMove = kb().move(emptyBoard().set(start).set(leftRook).set(rightRook).set(knight).set(bishop), start, rightEnd);
+
+        assertThat(leftMove).isEmpty();
+        assertThat(rightMove).isEmpty();
+    }
+
+    @Test
+    void e1g1_white_king_should_not_castle_if_is_in_check() {
+        var start = square("e1", "Kw");
+        var whiteRook = square("h1", "Rw");
+        var blackRook = square("e5", "Rb");
+        var end = square("g1");
+
+        var move = kw().move(emptyBoard().set(start).set(whiteRook).set(blackRook), start, end);
+
+        assertThat(move).isEmpty();
+    }
+
+    @Test
+    void e8c8_black_king_should_not_castle_if_white_bishop_on_g5() {
+        var start = square("e8", "Kb");
+        var rook = square("a8", "Rb");
+        var bishop = square("g5", "Bw");
+        var end = square("c8");
+
+        var move = kb().move(emptyBoard().set(start).set(rook).set(bishop), start, end);
+
+        assertThat(move).isEmpty();
+    }
+
+    @Test
+    void e1g1_white_king_should_not_castle_if_black_knight_on_g3() {
+        var start = square("e1", "Kw");
+        var rook = square("h1", "Rw");
+        var knight = square("g3", "Nb");
+        var end = square("g1");
+
+        var move = kw().move(emptyBoard().set(start).set(rook).set(knight), start, end);
 
         assertThat(move).isEmpty();
     }

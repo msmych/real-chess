@@ -28,7 +28,7 @@ public final class Knight extends Piece {
     }
 
     @Override
-    Optional<Move> doMove(Board board, Square start, Square end) {
+    public Optional<Move> pieceMove(Board board, Square start, Square end) {
         if (isKnightMove(start, end)) {
             return end.piece()
                     .map(piece -> eat(start, end, piece))

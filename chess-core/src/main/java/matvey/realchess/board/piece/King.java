@@ -28,7 +28,7 @@ public final class King extends Piece {
     }
 
     @Override
-    Optional<Move> doMove(Board board, Square start, Square end) {
+    public Optional<Move> pieceMove(Board board, Square start, Square end) {
         if (abs(end.file() - start.file()) <= 1 && abs(end.rank() - start.rank()) <= 1) {
             return end.piece()
                     .map(piece -> Move.eat(start, end, piece))
@@ -41,8 +41,31 @@ public final class King extends Piece {
     }
 
     private boolean canCastle(Board board, Square start, Square end) {
-        return start.pieceInfo().filter(Square.PieceInfo::initial).isPresent() &&
-            board.squareAt(rookPositionByKingTarget(end)).pieceInfo().filter(Square.PieceInfo::initial).isPresent();
+        if (start.rank() != end.rank() || abs(end.file() - start.file()) != 2 ||
+                start.pieceInfo().filter(Square.PieceInfo::initial).isEmpty()) {
+            return false;
+        }
+        var rook = board.squareAt(rookPositionByKingTarget(end));
+        return rook.pieceInfo().filter(Square.PieceInfo::initial).isPresent() &&
+                canMoveAlongLine(board, start, rook) &&
+                notInCheck(board, start, end);
+    }
+
+    private boolean notInCheck(Board board, Square start, Square end) {
+        if (end.file() > start.file()) {
+            for (var f = start.file(); f < end.file(); f++) {
+                if (board.squareAt(f + "" + start.rank()).inCheck(board, color)) {
+                    return false;
+                }
+            }
+        } else {
+            for (var f = start.file(); f > end.file(); f--) {
+                if (board.squareAt(f + "" + start.rank()).inCheck(board, color)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private String rookPositionByKingTarget(Square target) {

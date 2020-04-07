@@ -17,7 +17,7 @@ class PawnTest {
         var start = square("b2", "Pw");
         var end = square("b3");
 
-        var move = pw().doMove(initialBoard(), start, end);
+        var move = pw().pieceMove(initialBoard(), start, end);
 
         assertThat(move).hasValue(basicMove(start, end));
     }

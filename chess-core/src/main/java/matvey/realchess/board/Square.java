@@ -2,6 +2,7 @@ package matvey.realchess.board;
 
 import matvey.realchess.board.piece.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -71,6 +72,15 @@ public record Square(char file,
 
     public Square endMove(Piece piece) {
         return new Square(file, rank, color, Optional.of(new PieceInfo(piece, false)));
+    }
+
+    public boolean inCheck(Board board, Piece.Color color) {
+        return board.squares().stream()
+                .flatMap(List::stream)
+                .filter(square -> square.piece().map(piece -> piece.color() != color).orElse(false))
+                .anyMatch(square -> square.piece()
+                        .filter(piece -> piece.pieceMove(board, square, this).isPresent())
+                        .isPresent());
     }
 
     enum Color {

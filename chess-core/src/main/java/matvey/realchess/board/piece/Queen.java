@@ -27,7 +27,7 @@ public final class Queen extends Piece {
     }
 
     @Override
-    Optional<Move> doMove(Board board, Square start, Square end) {
+    public Optional<Move> pieceMove(Board board, Square start, Square end) {
         if (canMoveAlongLine(board, start, end) || canMoveDiagonally(board, start, end)) {
             return end.piece()
                     .map(piece -> eat(start, end, piece))
