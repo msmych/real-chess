@@ -8,10 +8,12 @@ import java.util.stream.Stream;
 import static matvey.realchess.board.Board.emptyBoard;
 import static matvey.realchess.board.Board.initialBoard;
 import static matvey.realchess.board.Move.basicMove;
+import static matvey.realchess.board.Move.castling;
 import static matvey.realchess.board.Move.eat;
 import static matvey.realchess.board.Square.square;
 import static matvey.realchess.board.piece.King.kb;
 import static matvey.realchess.board.piece.King.kw;
+import static matvey.realchess.board.piece.Rook.rb;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class KingTest {
@@ -28,7 +30,7 @@ class KingTest {
 
     @Test
     void e5_black_king_should_not_move_to_any_of_e8_f7_g7_g6() {
-        var start = square("e5", "Kb");
+        var start = square("e5").endMove(kb());
 
         Stream.of("e8", "f7", "g7", "g6")
                 .map(Square::square)
@@ -44,5 +46,67 @@ class KingTest {
         var move = kw().move(emptyBoard().set(start).set(end), start, end);
 
         assertThat(move).hasValue(eat(start, end, end.piece()));
+    }
+
+    @Test
+    void e1_white_king_should_castle_g1_and_c1() {
+        var start = square("e1", "Kw");
+        var rookRight = square("h1", "Rw");
+        var rookLeft = square("a1", "Rw");
+        var endRight = square("g1");
+        var endLeft = square("c1");
+
+        var moveRight = kw().move(emptyBoard().set(start).set(rookRight), start, endRight);
+        var moveLeft = kw().move(emptyBoard().set(start).set(rookLeft), start, endLeft);
+
+        assertThat(moveRight).hasValue(castling(start, endRight));
+        assertThat(moveLeft).hasValue(castling(start, endLeft));
+    }
+
+    @Test
+    void e8_black_king_should_castle_g8_and_c8() {
+        var start = square("e8", "Kb");
+        var rookRight = square("h8", "Rb");
+        var rookLeft = square("a8", "Rb");
+        var endRight = square("g8");
+        var endLeft = square("c8");
+
+        var moveRight = kb().move(emptyBoard().set(start).set(rookRight), start, endRight);
+        var moveLeft = kb().move(emptyBoard().set(start).set(rookLeft), start, endLeft);
+
+        assertThat(moveRight).hasValue(castling(start, endRight));
+        assertThat(moveLeft).hasValue(castling(start, endLeft));
+    }
+
+    @Test
+    void e1g1_white_king_should_not_castle_if_no_rook_on_h1() {
+        var start = square("e1", "Kw");
+        var end = square("g1");
+
+        var move = kw().move(emptyBoard().set(start), start, end);
+
+        assertThat(move).isEmpty();
+    }
+
+    @Test
+    void e8g8_black_king_should_not_castle_if_not_initial() {
+        var start = square("e8").endMove(kb());
+        var rook = square("h8", "Rb");
+        var end = square("g1");
+
+        var move = kb().move(emptyBoard().set(start).set(rook), start, end);
+
+        assertThat(move).isEmpty();
+    }
+
+    @Test
+    void e8c8_black_king_should_not_castle_if_rook_is_not_initial() {
+        var start = square("e8", "Kb");
+        var rook = square("a8").endMove(rb());
+        var end = square("c8");
+
+        var move = kb().move(emptyBoard().set(start).set(rook), start, end);
+
+        assertThat(move).isEmpty();
     }
 }

@@ -61,6 +61,10 @@ public record Square(char file,
         };
     }
 
+    public String position() {
+        return file + "" + rank;
+    }
+
     public Optional<Piece> piece() {
         return pieceInfo.map(PieceInfo::piece);
     }
