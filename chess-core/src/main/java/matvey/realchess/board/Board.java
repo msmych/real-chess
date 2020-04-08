@@ -1,5 +1,8 @@
 package matvey.realchess.board;
 
+import matvey.realchess.board.piece.King;
+import matvey.realchess.board.piece.Piece;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +51,7 @@ public record Board(List<List<Square>>squares,
     private static List<List<Square>> squares(String s) {
         var board = new ArrayList<List<Square>>(8);
         var ranks = s.split("\n");
-        for (var r = '1'; r <= '8'; r++) {
+        for (var r = '8'; r >= '1'; r--) {
             var rank = new ArrayList<Square>(8);
             var rankSquares = ranks[r - '1'].split(" ");
             for (var f = 'a'; f <= 'h'; f++) {
@@ -79,5 +82,22 @@ public record Board(List<List<Square>>squares,
 
     public Board passant(Square passant) {
         return new Board(set(passant).squares(), movesCount, Optional.of(passant));
+    }
+
+    public Board apply(Move move) {
+        return set(square(move.start().position()))
+                .set(move.end().endMove(move.start().piece().orElseThrow()));
+    }
+
+    public boolean kingInCheck(Piece.Color color) {
+        return squares.stream()
+                .flatMap(List::stream)
+                .filter(square -> square.piece()
+                        .filter(piece -> piece instanceof King)
+                        .filter(king -> king.color() == color)
+                        .isPresent())
+                .findAny()
+                .map(square -> square.inCheck(this))
+                .orElse(false);
     }
 }

@@ -10,6 +10,7 @@ import static java.lang.Math.abs;
 import static java.util.Optional.empty;
 import static matvey.realchess.board.Move.basicMove;
 import static matvey.realchess.board.Move.castling;
+import static matvey.realchess.board.Square.square;
 import static matvey.realchess.board.piece.Piece.Color.*;
 import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
@@ -52,17 +53,10 @@ public final class King extends Piece {
     }
 
     private boolean notInCheck(Board board, Square start, Square end) {
-        if (end.file() > start.file()) {
-            for (var f = start.file(); f < end.file(); f++) {
-                if (board.squareAt(f + "" + start.rank()).inCheck(board, color)) {
-                    return false;
-                }
-            }
-        } else {
-            for (var f = start.file(); f > end.file(); f--) {
-                if (board.squareAt(f + "" + start.rank()).inCheck(board, color)) {
-                    return false;
-                }
+        for (var f = start.file(); abs(end.file() - f) > 0; f += Integer.compare(end.file(), start.file())) {
+            var square = square(f + "" + start.rank()).endMove(start.piece().orElseThrow());
+            if (square.inCheck(board.set(square(start.position())).set(square))) {
+                return false;
             }
         }
         return true;

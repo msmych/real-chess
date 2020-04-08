@@ -6,6 +6,7 @@ import matvey.realchess.board.Square;
 
 import java.util.Optional;
 
+import static java.lang.Math.abs;
 import static java.util.Optional.empty;
 
 public abstract class Piece {
@@ -23,7 +24,8 @@ public abstract class Piece {
         if (end.piece().map(piece -> piece.color == color).orElse(false)) {
             return empty();
         }
-        return pieceMove(board, start, end);
+        return pieceMove(board, start, end)
+                .filter(move -> !board.apply(move).kingInCheck(color));
     }
 
     public abstract Optional<Move> pieceMove(Board board, Square start, Square end);
@@ -47,17 +49,10 @@ public abstract class Piece {
         if (start.rank() != end.rank()) {
             return false;
         }
-        if (end.file() > start.file()) {
-            for (char f = (char) (start.file() + 1); f < end.file(); f++) {
-                if (board.squareAt(f + "" + start.rank()).piece().isPresent()) {
-                    return false;
-                }
-            }
-        } else {
-            for (char f = (char) (start.file() - 1); f > end.file(); f--) {
-                if (board.squareAt(f + "" + start.rank()).piece().isPresent()) {
-                    return false;
-                }
+        var one = Integer.compare(end.file(), start.file());
+        for (char f = (char) (start.file() + one); abs(end.file() - f) > 0; f += one) {
+            if (board.squareAt(f + "" + start.rank()).piece().isPresent()) {
+                return false;
             }
         }
         return true;
@@ -67,17 +62,10 @@ public abstract class Piece {
         if (start.file() != end.file()) {
             return false;
         }
-        if (end.rank() > start.rank()) {
-            for (char r = (char) (start.rank() + 1); r < end.rank(); r++) {
-                if (board.squareAt(start.file() + "" + r).piece().isPresent()) {
-                    return false;
-                }
-            }
-        } else {
-            for (char r = (char) (start.rank() - 1); r > end.rank(); r--) {
-                if (board.squareAt(start.file() + "" + r).piece().isPresent()) {
-                    return false;
-                }
+        var one = Integer.compare(end.rank(), start.rank());
+        for (char r = (char) (start.rank() + one); abs(end.rank() - r) > 0; r += one) {
+            if (board.squareAt(start.file() + "" + r).piece().isPresent()) {
+                return false;
             }
         }
         return true;

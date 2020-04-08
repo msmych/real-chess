@@ -74,10 +74,12 @@ public record Square(char file,
         return new Square(file, rank, color, Optional.of(new PieceInfo(piece, false)));
     }
 
-    public boolean inCheck(Board board, Piece.Color color) {
+    public boolean inCheck(Board board) {
         return board.squares().stream()
                 .flatMap(List::stream)
-                .filter(square -> square.piece().map(piece -> piece.color() != color).orElse(false))
+                .filter(square -> square.piece()
+                        .map(piece -> piece.color() != piece().map(Piece::color).orElseThrow())
+                        .orElse(false))
                 .anyMatch(square -> square.piece()
                         .filter(piece -> piece.pieceMove(board, square, this).isPresent())
                         .isPresent());
