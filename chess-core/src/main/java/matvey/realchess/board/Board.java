@@ -85,8 +85,19 @@ public record Board(List<List<Square>>squares,
     }
 
     public Board apply(Move move) {
-        return set(square(move.start().position()))
-                .set(move.end().endMove(move.start().piece().orElseThrow()));
+        return switch (move.type()) {
+            case BASIC -> set(square(move.start().position()))
+                    .set(move.end().endMove(move.start().piece().orElseThrow()));
+            case EN_PASSANT -> set(square(move.start().position()))
+                    .set(move.end().endMove(move.start().piece().orElseThrow()))
+                    .set(square(move.end().file() + "" + move.eaten().map(Piece::passantRank).orElseThrow()));
+            case CASTLING -> set(square(move.start().position()))
+                    .set(move.end().endMove(move.start().piece().orElseThrow()))
+                    .set(square(move.end().rookPositionForCastling()))
+                    .set(square(move.end().rookTargetForCastling())
+                            .endMove(squareAt(move.end().rookPositionForCastling()).piece().orElseThrow()));
+
+        };
     }
 
     public boolean kingInCheck(Piece.Color color) {
