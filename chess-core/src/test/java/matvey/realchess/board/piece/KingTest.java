@@ -20,10 +20,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class KingTest {
 
     @Test
-    void e3_white_king_should_move_to_any_of_e4_f4_f3_f2_e2_d2_d3_d4() {
-        var start = square("e3", "Kw");
+    void e4_white_king_should_move_to_any_of_e5_f5_f4_f3_e3_d3_d4_d5() {
+        var start = square("e4", "Kw");
 
-        Stream.of("e4", "f4", "f3", "f2", "e2", "d2", "d3", "d4")
+        Stream.of("e5", "f5", "f4", "f3", "e3", "d3", "d4", "d5")
                 .map(Square::square)
                 .forEach(end -> assertThat(kw().move(initialBoard().set(start), start, end))
                         .hasValue(basicMove(start, end)));

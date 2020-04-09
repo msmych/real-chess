@@ -42,4 +42,8 @@ public final class Knight extends Piece {
             abs(end.file() - start.file()) == 1 && abs(end.rank() - start.rank()) == 2;
     }
 
+    @Override
+    public String toString() {
+        return "N" + color;
+    }
 }

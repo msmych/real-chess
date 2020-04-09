@@ -3,18 +3,21 @@ package matvey.realchess.board;
 import matvey.realchess.board.piece.King;
 import matvey.realchess.board.piece.Piece;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.IntStream.range;
 import static matvey.realchess.board.Square.square;
 
 /**
  * <code>passant</code> — square with pawn
  * that advanced two squares
  */
-public record Board(List<List<Square>>squares,
+public record Board(Map<Character, Map<Character, Square>>squares,
                     int movesCount,
                     Optional<Square>passant) {
 
@@ -48,36 +51,33 @@ public record Board(List<List<Square>>squares,
         return new Board(squares(s), 0, empty());
     }
 
-    private static List<List<Square>> squares(String s) {
-        var board = new ArrayList<List<Square>>(8);
-        var ranks = s.split("\n");
-        for (var r = '8'; r >= '1'; r--) {
-            var rank = new ArrayList<Square>(8);
-            var rankSquares = ranks[r - '1'].split(" ");
-            for (var f = 'a'; f <= 'h'; f++) {
-                rank.add(square(f + "" + r, rankSquares[f - 'a']));
-            }
-            board.add(List.copyOf(rank));
+    private static Map<Character, Map<Character, Square>> squares(String s) {
+        var board = new HashMap<Character, Map<Character, Square>>(8);
+        for (var f = 'a'; f <= 'h'; f++) {
+            board.put(f, new HashMap<>());
         }
-        return List.copyOf(board);
+        var ranks = s.split("\n");
+        for (var r = '1'; r <= '8'; r++) {
+            var rankSquares = ranks[7 - (r - '1')].split(" ");
+            for (var f = 'a'; f <= 'h'; f++) {
+                board.get(f).put(r, square(f + "" + r, rankSquares[f - 'a']));
+            }
+        }
+        return Map.copyOf(board);
     }
 
     public Square squareAt(String position) {
-        return squareAt((char) (position.charAt(0) - 'a'), (char) (position.charAt(1) - '1'));
-    }
-
-    public Square squareAt(char file, char rank) {
-        return squares.get(rank).get(file);
+        return this.squares.get(position.charAt(0)).get(position.charAt(1));
     }
 
     public Board set(Square square) {
-        var squares = new ArrayList<>(this.squares);
-        var i = square.rank() - '1';
-        var rankSquares = new ArrayList<>(squares.get(i));
-        var j = square.file() - 'a';
-        rankSquares.set(j, square);
-        squares.set(i, List.copyOf(rankSquares));
-        return new Board(List.copyOf(squares), movesCount, passant);
+        var squares = new HashMap<>(this.squares);
+        var f = square.file();
+        var fileSquares = new HashMap<>(squares.get(f));
+        var r = square.rank();
+        fileSquares.put(r, square);
+        squares.put(f, Map.copyOf(fileSquares));
+        return new Board(Map.copyOf(squares), movesCount, passant);
     }
 
     public Board passant(Square passant) {
@@ -101,8 +101,9 @@ public record Board(List<List<Square>>squares,
     }
 
     public boolean kingInCheck(Piece.Color color) {
-        return squares.stream()
-                .flatMap(List::stream)
+        return squares.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
                 .filter(square -> square.piece()
                         .filter(piece -> piece instanceof King)
                         .filter(king -> king.color() == color)
@@ -110,5 +111,18 @@ public record Board(List<List<Square>>squares,
                 .findAny()
                 .map(square -> square.inCheck(this))
                 .orElse(false);
+    }
+
+    @Override
+    public String toString() {
+        return range(0, 8)
+                .mapToObj(r -> (char) ((8 - r) + '0'))
+                .map(r -> range(0, 8)
+                        .mapToObj(f -> (char) (f + 'a'))
+                        .map(f -> squares.get(f).get(r))
+                        .map(Square::toString)
+                        .collect(joining(" ")))
+                .collect(joining("\n"));
+
     }
 }

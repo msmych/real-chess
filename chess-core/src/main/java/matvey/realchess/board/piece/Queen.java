@@ -36,4 +36,8 @@ public final class Queen extends Piece {
         return empty();
     }
 
+    @Override
+    public String toString() {
+        return "Q" + color;
+    }
 }

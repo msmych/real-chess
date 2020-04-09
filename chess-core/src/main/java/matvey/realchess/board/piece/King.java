@@ -8,8 +8,7 @@ import java.util.Optional;
 
 import static java.lang.Math.abs;
 import static java.util.Optional.empty;
-import static matvey.realchess.board.Move.basicMove;
-import static matvey.realchess.board.Move.castling;
+import static matvey.realchess.board.Move.*;
 import static matvey.realchess.board.Square.square;
 import static matvey.realchess.board.piece.Piece.Color.*;
 import static matvey.realchess.board.piece.Piece.Color.WHITE;
@@ -32,7 +31,7 @@ public final class King extends Piece {
     public Optional<Move> pieceMove(Board board, Square start, Square end) {
         if (abs(end.file() - start.file()) <= 1 && abs(end.rank() - start.rank()) <= 1) {
             return end.piece()
-                    .map(piece -> Move.eat(start, end, piece))
+                    .map(piece -> eat(start, end, piece))
                     .or(() -> Optional.of(basicMove(start, end)));
         }
         if (canCastle(board, start, end)) {
@@ -72,4 +71,8 @@ public final class King extends Piece {
         };
     }
 
+    @Override
+    public String toString() {
+        return "K" + color;
+    }
 }

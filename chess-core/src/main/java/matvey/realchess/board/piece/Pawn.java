@@ -77,4 +77,9 @@ public final class Pawn extends Piece {
         return board.squareAt(start.file() + "" + ((char) ((end.rank() + start.rank()) / 2)))
                 .piece().isPresent();
     }
+
+    @Override
+    public String toString() {
+        return "P" + color;
+    }
 }

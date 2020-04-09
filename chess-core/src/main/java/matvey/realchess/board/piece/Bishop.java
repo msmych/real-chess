@@ -36,4 +36,8 @@ public final class Bishop extends Piece {
         return empty();
     }
 
+    @Override
+    public String toString() {
+        return "B" + color;
+    }
 }

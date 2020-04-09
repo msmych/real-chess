@@ -124,6 +124,11 @@ public abstract class Piece {
     }
 
     public enum Color {
-        WHITE, BLACK
+        WHITE, BLACK;
+
+        @Override
+        public String toString() {
+            return this == WHITE ? "w" : "b";
+        }
     }
 }

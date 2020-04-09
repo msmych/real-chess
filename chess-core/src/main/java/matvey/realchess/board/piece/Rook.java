@@ -36,4 +36,8 @@ public final class Rook extends Piece {
         return empty();
     }
 
+    @Override
+    public String toString() {
+        return "R" + color;
+    }
 }

@@ -1,8 +1,9 @@
 package matvey.realchess.board;
 
-import matvey.realchess.board.piece.*;
+import matvey.realchess.board.piece.Piece;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
@@ -41,7 +42,7 @@ public record Square(char file,
     }
 
     private static Color color(char file, char rank) {
-        return (file - 'a' + rank - '1') % 2 == 0 ? LIGHT : DARK;
+        return (file - 'a' + rank - '1') % 2 == 1 ? LIGHT : DARK;
     }
 
     private static Optional<Piece> piece(String symbol) {
@@ -75,8 +76,9 @@ public record Square(char file,
     }
 
     public boolean inCheck(Board board) {
-        return board.squares().stream()
-                .flatMap(List::stream)
+        return board.squares().values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
                 .filter(square -> square.piece()
                         .map(piece -> piece.color() != piece().map(Piece::color).orElseThrow())
                         .orElse(false))
@@ -106,6 +108,16 @@ public record Square(char file,
     }
 
     enum Color {
-        LIGHT, DARK
+        LIGHT, DARK;
+
+        @Override
+        public String toString() {
+            return this == LIGHT ? "%%" : "..";
+        }
+    }
+
+    @Override
+    public String toString() {
+        return piece().map(Piece::toString).orElse(color.toString());
     }
 }
