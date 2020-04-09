@@ -41,6 +41,13 @@ public abstract class Piece {
         };
     }
 
+    public final char passantRank() {
+        return switch (color) {
+            case WHITE -> '4';
+            case BLACK -> '5';
+        };
+    }
+
     protected final boolean canMoveAlongLine(Board board, Square start, Square end) {
         return canMoveHorizontally(board, start, end) || canMoveVertically(board, start, end);
     }

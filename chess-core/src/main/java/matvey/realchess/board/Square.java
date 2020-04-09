@@ -85,6 +85,26 @@ public record Square(char file,
                         .isPresent());
     }
 
+    public String rookPositionForCastling() {
+        return switch (position()) {
+            case "g1" -> "h1";
+            case "c1" -> "a1";
+            case "g8" -> "h8";
+            case "c8" -> "a8";
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
+    public String rookTargetForCastling() {
+        return switch (position()) {
+            case "c1" -> "d1";
+            case "g1" -> "f1";
+            case "c8" -> "d8";
+            case "g8" -> "f8";
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
     enum Color {
         LIGHT, DARK
     }
