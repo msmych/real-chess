@@ -1,6 +1,7 @@
 package matvey.realchess.board;
 
 import matvey.realchess.board.piece.King;
+import matvey.realchess.board.piece.Pawn;
 import matvey.realchess.board.piece.Piece;
 
 import java.util.Collection;
@@ -8,10 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Math.abs;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.IntStream.range;
 import static matvey.realchess.board.Square.square;
+import static matvey.realchess.board.piece.Piece.Color.BLACK;
+import static matvey.realchess.board.piece.Piece.Color.WHITE;
 
 /**
  * <code>passant</code> — square with pawn
@@ -70,6 +74,54 @@ public record Board(Map<Character, Map<Character, Square>>squares,
         return this.squares.get(position.charAt(0)).get(position.charAt(1));
     }
 
+    public Piece.Color currentMove() {
+        return movesCount % 2 == 0 ? WHITE : BLACK;
+    }
+
+    public Optional<Move.Result> move(String move) {
+        return square(move.substring(0, 2))
+                .move(this, square(move.substring(2, 4)))
+                .map(this::apply)
+                .map(board -> new Move.Result(board, board.winner()));
+    }
+
+    public Board apply(Move move) {
+        var board = next().set(square(move.start().position()));
+        return switch (move.type()) {
+            case BASIC -> move.start().piece().filter(piece -> piece instanceof Pawn).isPresent() &&
+                    abs(move.end().rank() - move.start().rank()) == 2
+                    ? board.passant(move.end().endMove(move.start().piece().orElseThrow()))
+                    : board.set(move.end().endMove(move.start().piece().orElseThrow()));
+            case EN_PASSANT -> board
+                    .set(move.end().endMove(move.start().piece().orElseThrow()))
+                    .set(square(move.end().file() + "" + move.eaten().map(Piece::passantRank).orElseThrow()));
+            case CASTLING -> board
+                    .set(move.end().endMove(move.start().piece().orElseThrow()))
+                    .set(square(move.end().rookPositionForCastling()))
+                    .set(square(move.end().rookTargetForCastling())
+                            .endMove(squareAt(move.end().rookPositionForCastling()).piece().orElseThrow()));
+
+        };
+    }
+
+    private Optional<Piece.Color> winner() {
+        return squares.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .filter(square -> square.piece().map(piece -> piece.color() == currentMove()).orElse(false))
+                .anyMatch(this::canMoveAnywhereFrom)
+                ? empty()
+                : Optional.of(currentMove() == WHITE ? BLACK : WHITE);
+    }
+
+    private boolean canMoveAnywhereFrom(Square start) {
+        return squares.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .map(end -> start.piece().map(piece -> piece.move(this, start, end)))
+                .anyMatch(Optional::isPresent);
+    }
+
     public Board set(Square square) {
         var squares = new HashMap<>(this.squares);
         var f = square.file();
@@ -84,20 +136,8 @@ public record Board(Map<Character, Map<Character, Square>>squares,
         return new Board(set(passant).squares(), movesCount, Optional.of(passant));
     }
 
-    public Board apply(Move move) {
-        return switch (move.type()) {
-            case BASIC -> set(square(move.start().position()))
-                    .set(move.end().endMove(move.start().piece().orElseThrow()));
-            case EN_PASSANT -> set(square(move.start().position()))
-                    .set(move.end().endMove(move.start().piece().orElseThrow()))
-                    .set(square(move.end().file() + "" + move.eaten().map(Piece::passantRank).orElseThrow()));
-            case CASTLING -> set(square(move.start().position()))
-                    .set(move.end().endMove(move.start().piece().orElseThrow()))
-                    .set(square(move.end().rookPositionForCastling()))
-                    .set(square(move.end().rookTargetForCastling())
-                            .endMove(squareAt(move.end().rookPositionForCastling()).piece().orElseThrow()));
-
-        };
+    public Board next() {
+        return new Board(squares, movesCount + 1, passant);
     }
 
     public boolean kingInCheck(Piece.Color color) {

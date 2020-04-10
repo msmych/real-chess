@@ -71,6 +71,12 @@ public record Square(char file,
         return pieceInfo.map(PieceInfo::piece);
     }
 
+    public Optional<Move> move(Board board, Square end) {
+        return piece()
+                .filter(piece -> board.currentMove() == piece.color())
+                .flatMap(piece -> piece.move(board, this, end));
+    }
+
     public Square endMove(Piece piece) {
         return new Square(file, rank, color, Optional.of(new PieceInfo(piece, false)));
     }
