@@ -1,16 +1,16 @@
-package matvey.realchess.board.piece;
+package matvey.realchess.piece;
 
 import org.junit.jupiter.api.Test;
 
-import static matvey.realchess.board.Board.emptyBoard;
-import static matvey.realchess.board.Board.initialBoard;
-import static matvey.realchess.board.Square.square;
-import static matvey.realchess.board.piece.Bishop.bw;
-import static matvey.realchess.board.piece.King.kb;
-import static matvey.realchess.board.piece.King.kw;
-import static matvey.realchess.board.piece.Pawn.pb;
-import static matvey.realchess.board.piece.Pawn.pw;
-import static matvey.realchess.board.piece.Rook.rw;
+import static matvey.realchess.Board.emptyBoard;
+import static matvey.realchess.Board.initialBoard;
+import static matvey.realchess.Square.square;
+import static matvey.realchess.piece.Bishop.bw;
+import static matvey.realchess.piece.King.kb;
+import static matvey.realchess.piece.King.kw;
+import static matvey.realchess.piece.Pawn.pb;
+import static matvey.realchess.piece.Pawn.pw;
+import static matvey.realchess.piece.Rook.rw;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class PieceTest {

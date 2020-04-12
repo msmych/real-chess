@@ -1,26 +1,26 @@
-package matvey.realchess.board;
+package matvey.realchess;
 
-import matvey.realchess.board.piece.Piece;
+import matvey.realchess.piece.Piece;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Optional.empty;
-import static matvey.realchess.board.Square.Color.DARK;
-import static matvey.realchess.board.Square.Color.LIGHT;
-import static matvey.realchess.board.piece.Bishop.bb;
-import static matvey.realchess.board.piece.Bishop.bw;
-import static matvey.realchess.board.piece.King.kb;
-import static matvey.realchess.board.piece.King.kw;
-import static matvey.realchess.board.piece.Knight.nb;
-import static matvey.realchess.board.piece.Knight.nw;
-import static matvey.realchess.board.piece.Pawn.pb;
-import static matvey.realchess.board.piece.Pawn.pw;
-import static matvey.realchess.board.piece.Queen.qb;
-import static matvey.realchess.board.piece.Queen.qw;
-import static matvey.realchess.board.piece.Rook.rb;
-import static matvey.realchess.board.piece.Rook.rw;
+import static matvey.realchess.Square.Color.DARK;
+import static matvey.realchess.Square.Color.LIGHT;
+import static matvey.realchess.piece.Bishop.bb;
+import static matvey.realchess.piece.Bishop.bw;
+import static matvey.realchess.piece.King.kb;
+import static matvey.realchess.piece.King.kw;
+import static matvey.realchess.piece.Knight.nb;
+import static matvey.realchess.piece.Knight.nw;
+import static matvey.realchess.piece.Pawn.pb;
+import static matvey.realchess.piece.Pawn.pw;
+import static matvey.realchess.piece.Queen.qb;
+import static matvey.realchess.piece.Queen.qw;
+import static matvey.realchess.piece.Rook.rb;
+import static matvey.realchess.piece.Rook.rw;
 
 public record Square(char file,
                      char rank,
@@ -113,7 +113,7 @@ public record Square(char file,
         };
     }
 
-    enum Color {
+    public enum Color {
         LIGHT, DARK;
 
         @Override

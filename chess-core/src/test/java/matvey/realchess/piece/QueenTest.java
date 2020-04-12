@@ -1,16 +1,16 @@
-package matvey.realchess.board.piece;
+package matvey.realchess.piece;
 
-import matvey.realchess.board.Square;
+import matvey.realchess.Square;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
-import static matvey.realchess.board.Board.emptyBoard;
-import static matvey.realchess.board.Move.eat;
-import static matvey.realchess.board.Move.basicMove;
-import static matvey.realchess.board.Square.square;
-import static matvey.realchess.board.piece.Queen.qb;
-import static matvey.realchess.board.piece.Queen.qw;
+import static matvey.realchess.Board.emptyBoard;
+import static matvey.realchess.Move.eat;
+import static matvey.realchess.Move.basicMove;
+import static matvey.realchess.Square.square;
+import static matvey.realchess.piece.Queen.qb;
+import static matvey.realchess.piece.Queen.qw;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class QueenTest {

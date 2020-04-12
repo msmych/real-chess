@@ -1,8 +1,8 @@
-package matvey.realchess.board;
+package matvey.realchess;
 
-import matvey.realchess.board.piece.King;
-import matvey.realchess.board.piece.Pawn;
-import matvey.realchess.board.piece.Piece;
+import matvey.realchess.piece.King;
+import matvey.realchess.piece.Pawn;
+import matvey.realchess.piece.Piece;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,9 +13,9 @@ import static java.lang.Math.abs;
 import static java.util.Optional.empty;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.IntStream.range;
-import static matvey.realchess.board.Square.square;
-import static matvey.realchess.board.piece.Piece.Color.BLACK;
-import static matvey.realchess.board.piece.Piece.Color.WHITE;
+import static matvey.realchess.Square.square;
+import static matvey.realchess.piece.Piece.Color.BLACK;
+import static matvey.realchess.piece.Piece.Color.WHITE;
 
 /**
  * <code>passant</code> — square with pawn
@@ -35,7 +35,7 @@ public record Board(Map<Character, Map<Character, Square>>squares,
                 .. .. .. .. .. .. .. ..
                 .. .. .. .. .. .. .. ..
                 .. .. .. .. .. .. .. ..
-                """);
+                """, 0);
     }
 
     public static Board initialBoard() {
@@ -48,11 +48,11 @@ public record Board(Map<Character, Map<Character, Square>>squares,
                 .. .. .. .. .. .. .. ..
                 Pw Pw Pw Pw Pw Pw Pw Pw
                 Rw Nw Bw Qw Kw Bw Nw Rw
-                """);
+                """, 0);
     }
 
-    static Board fromString(String s) {
-        return new Board(squares(s), 0, empty());
+    static Board fromString(String s, int movesCount) {
+        return new Board(squares(s), movesCount, empty());
     }
 
     private static Map<Character, Map<Character, Square>> squares(String s) {
@@ -79,8 +79,8 @@ public record Board(Map<Character, Map<Character, Square>>squares,
     }
 
     public Optional<Move.Result> move(String move) {
-        return square(move.substring(0, 2))
-                .move(this, square(move.substring(2, 4)))
+        return squareAt(move.substring(0, 2))
+                .move(this, squareAt(move.substring(2, 4)))
                 .map(this::apply)
                 .map(board -> new Move.Result(board, board.winner()));
     }

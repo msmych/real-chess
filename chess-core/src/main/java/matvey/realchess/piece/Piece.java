@@ -1,8 +1,8 @@
-package matvey.realchess.board.piece;
+package matvey.realchess.piece;
 
-import matvey.realchess.board.Board;
-import matvey.realchess.board.Move;
-import matvey.realchess.board.Square;
+import matvey.realchess.Board;
+import matvey.realchess.Move;
+import matvey.realchess.Square;
 
 import java.util.Optional;
 

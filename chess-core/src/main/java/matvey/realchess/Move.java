@@ -1,11 +1,11 @@
-package matvey.realchess.board;
+package matvey.realchess;
 
-import matvey.realchess.board.piece.Piece;
+import matvey.realchess.piece.Piece;
 
 import java.util.Optional;
 
 import static java.util.Optional.empty;
-import static matvey.realchess.board.Move.Type.*;
+import static matvey.realchess.Move.Type.*;
 
 public record Move(Square start,
                    Square end,

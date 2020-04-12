@@ -1,16 +1,16 @@
-package matvey.realchess.board.piece;
+package matvey.realchess.piece;
 
-import matvey.realchess.board.Board;
-import matvey.realchess.board.Move;
-import matvey.realchess.board.Square;
+import matvey.realchess.Board;
+import matvey.realchess.Move;
+import matvey.realchess.Square;
 
 import java.util.Optional;
 
 import static java.util.Optional.empty;
-import static matvey.realchess.board.Move.basicMove;
-import static matvey.realchess.board.Move.eat;
-import static matvey.realchess.board.piece.Piece.Color.BLACK;
-import static matvey.realchess.board.piece.Piece.Color.WHITE;
+import static matvey.realchess.Move.basicMove;
+import static matvey.realchess.Move.eat;
+import static matvey.realchess.piece.Piece.Color.BLACK;
+import static matvey.realchess.piece.Piece.Color.WHITE;
 
 public final class Bishop extends Piece {
 

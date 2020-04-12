@@ -9,9 +9,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation "org.assertj:assertj-core:3.11.1"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.1"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.3.1"
+    compile project(":chess-core")
 }
 
 compileJava {
@@ -29,6 +27,9 @@ test {
 
 jar {
     manifest {
-        attributes "Main-Class": "matvey.realchess.Chess"
+        attributes "Main-Class": "matvey.realchess.console.ConsoleChess"
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
