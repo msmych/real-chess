@@ -26,9 +26,3 @@ test {
     useJUnitPlatform()
     jvmArgs "--enable-preview"
 }
-
-jar {
-    manifest {
-        attributes "Main-Class": "matvey.realchess.Chess"
-    }
-}
