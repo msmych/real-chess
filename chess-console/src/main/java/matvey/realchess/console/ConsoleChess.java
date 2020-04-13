@@ -3,8 +3,6 @@ package matvey.realchess.console;
 import matvey.realchess.Board;
 import matvey.realchess.piece.Piece;
 
-import java.io.IOException;
-import java.util.Properties;
 import java.util.Scanner;
 
 import static matvey.realchess.Board.initialBoard;
@@ -40,8 +38,8 @@ public class ConsoleChess {
                         .append(square.piece()
                                 .map(Piece::toString)
                                 .map(String::toLowerCase)
-                                .map(props.properties::get)
-                                .orElseGet(() -> props.properties.get(square.color() == LIGHT ? "sl" : "sd")))
+                                .map(props::get)
+                                .orElseGet(() -> props.get(square.color() == LIGHT ? "sl" : "sd")))
                         .append(' ');
             }
             sb.append(r).append('\n');
@@ -52,16 +50,4 @@ public class ConsoleChess {
                 .toString();
     }
 
-    private static class Props {
-
-        private final Properties properties = new Properties();
-
-        Props(String file) {
-            try {
-                properties.load(getClass().getClassLoader().getResourceAsStream(file));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

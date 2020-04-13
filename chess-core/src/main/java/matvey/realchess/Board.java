@@ -82,7 +82,7 @@ public record Board(Map<Character, Map<Character, Square>>squares,
         return squareAt(move.substring(0, 2))
                 .move(this, squareAt(move.substring(2, 4)))
                 .map(this::apply)
-                .map(board -> new Move.Result(board, board.winner()));
+                .map(board -> new Move.Result(board, board.pawnToPromote(), board.winner()));
     }
 
     public Board apply(Move move) {
@@ -102,6 +102,15 @@ public record Board(Map<Character, Map<Character, Square>>squares,
                             .endMove(squareAt(move.end().rookPositionForCastling()).piece().orElseThrow()));
 
         };
+    }
+
+    private Optional<Square> pawnToPromote() {
+        return squares.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .filter(square -> square.rank() == '1' || square.rank() == '8')
+                .filter(square -> square.piece().map(piece -> piece instanceof Pawn).isPresent())
+                .findAny();
     }
 
     private Optional<Piece.Color> winner() {

@@ -12,7 +12,7 @@ public record Move(Square start,
                    Type type,
                    Optional<Piece>eaten) {
 
-    public record Result(Board board, Optional<Piece.Color>winner) {}
+    public record Result(Board board, Optional<Square>pawnToPromote, Optional<Piece.Color>winner) {}
 
     public static Move basicMove(Square start, Square end) {
         return new Move(start, end, BASIC, empty());
