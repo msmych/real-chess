@@ -31,25 +31,25 @@ public class ConsoleChess {
     }
 
     private static String serialize(Board board, Props props) {
-        var sb = new StringBuilder("  a  b  c d  e f  g  h  \n");
+        var sb = new StringBuilder("  a  b  c  d  e  f  g  h  \n");
         for (var r = '8'; r >= '1'; r--) {
-            sb.append(r).append(' ');
+            sb.append(r);
             for (var f = 'a'; f <= 'h'; f++) {
                 var square = board.squareAt(f + "" + r);
-                sb.append(square
-                    .piece()
-                    .map(Piece::toString)
-                    .map(String::toLowerCase)
-                    .map(props.properties::get)
-                    .orElseGet(() -> square.color() == LIGHT ? "▫️" : "▪️"))
-                    .append(' ');
+                sb.append(' ')
+                        .append(square.piece()
+                                .map(Piece::toString)
+                                .map(String::toLowerCase)
+                                .map(props.properties::get)
+                                .orElseGet(() -> props.properties.get(square.color() == LIGHT ? "sl" : "sd")))
+                        .append(' ');
             }
             sb.append(r).append('\n');
         }
-        return sb.append("  a  b  c d  e f  g  h  ")
-            .append('\n')
-            .append("Current move: ").append(board.currentMove())
-            .toString();
+        return sb.append("  a  b  c  d  e  f  g  h  ")
+                .append('\n')
+                .append("Current move: ").append(board.currentMove())
+                .toString();
     }
 
     private static class Props {
