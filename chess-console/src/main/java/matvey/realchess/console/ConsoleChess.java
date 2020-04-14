@@ -19,11 +19,15 @@ public class ConsoleChess {
             var move = scanner.nextLine();
             var moveResult = board.move(move);
             if (moveResult.isPresent()) {
-                if (moveResult.get().winner().isPresent()) {
+                if (moveResult.get().pawnToPromote().isPresent()) {
+                    System.out.println("Insert piece for pawn to promote to:");
+                    board = board.promotePawn(moveResult.get().pawnToPromote().get().position(), scanner.nextLine());
+                } else if (moveResult.get().winner().isPresent()) {
                     System.out.println(moveResult.get().winner() + " WINS");
                     break;
+                } else {
+                    board = moveResult.get().board();
                 }
-                board = moveResult.get().board();
             }
         }
     }

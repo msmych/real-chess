@@ -109,8 +109,12 @@ public record Board(Map<Character, Map<Character, Square>>squares,
                 .map(Map::values)
                 .flatMap(Collection::stream)
                 .filter(square -> square.rank() == '1' || square.rank() == '8')
-                .filter(square -> square.piece().map(piece -> piece instanceof Pawn).isPresent())
+                .filter(square -> square.piece().map(piece -> piece instanceof Pawn).orElse(false))
                 .findAny();
+    }
+
+    public Board promotePawn(String position, String piece) {
+        return set(square(position, piece));
     }
 
     private Optional<Piece.Color> winner() {
