@@ -2,3 +2,4 @@ rootProject.name = 'real-chess'
 
 include "chess-core"
 include "chess-console"
+include "chess-telegram"

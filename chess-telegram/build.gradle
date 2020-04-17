@@ -1,0 +1,26 @@
+plugins {
+    id "java"
+}
+
+sourceCompatibility = "14"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "org.telegram:telegrambots:4.7"
+}
+
+compileJava {
+    options.compilerArgs += ["--enable-preview"]
+}
+
+compileTestJava {
+    options.compilerArgs += ["--enable-preview"]
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgs "--enable-preview"
+}
