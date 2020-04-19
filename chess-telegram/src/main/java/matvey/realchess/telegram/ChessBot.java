@@ -1,8 +1,7 @@
 package matvey.realchess.telegram;
 
-import matvey.realchess.telegram.update.processor.HelpUpdateProcessor;
-import matvey.realchess.telegram.update.processor.StartUpdateProcessor;
-import matvey.realchess.telegram.update.processor.UpdateProcessor;
+import matvey.realchess.telegram.datasource.ChessDataSource;
+import matvey.realchess.telegram.update.processor.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -14,15 +13,19 @@ public class ChessBot extends TelegramLongPollingBot {
 
     private static final Logger log = LoggerFactory.getLogger(ChessBot.class);
 
-    private final Set<UpdateProcessor> updateProcessors = Set.of(
-            new StartUpdateProcessor(this),
-            new HelpUpdateProcessor(this)
-    );
-
     private final String token;
+    private final Props props;
+    private final Set<UpdateProcessor> updateProcessors;
 
-    public ChessBot(String token) {
+    public ChessBot(String token, ChessDataSource chessDataSource, Props props) {
         this.token = token;
+        this.props = props;
+        this.updateProcessors = Set.of(
+                new StartUpdateProcessor(this),
+                new HelpUpdateProcessor(this),
+                new PlayUpdateProcessor(this, chessDataSource, this.props),
+                new GameIdUpdateProcessor(this, chessDataSource)
+        );
     }
 
     @Override

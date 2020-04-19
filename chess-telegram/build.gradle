@@ -9,7 +9,11 @@ repositories {
 }
 
 dependencies {
+    compile project(":chess-core")
+
     compile "org.telegram:telegrambots:4.7"
+
+    compile "ch.qos.logback:logback-classic:1.2.3"
 }
 
 compileJava {
@@ -23,4 +27,13 @@ compileTestJava {
 test {
     useJUnitPlatform()
     jvmArgs "--enable-preview"
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "matvey.realchess.telegram.ChessBotApp"
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }

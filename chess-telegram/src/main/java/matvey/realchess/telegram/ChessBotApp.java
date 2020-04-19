@@ -1,5 +1,6 @@
 package matvey.realchess.telegram;
 
+import matvey.realchess.telegram.datasource.InMemoryChessDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.ApiContextInitializer;
@@ -12,7 +13,8 @@ public class ChessBotApp {
 
     public static void main(String[] args) throws TelegramApiRequestException {
         ApiContextInitializer.init();
-        new TelegramBotsApi().registerBot(new ChessBot(args[0]));
+        new TelegramBotsApi().registerBot(
+                new ChessBot(args[0], new InMemoryChessDataSource(), new Props("chess.properties")));
         log.info("Поехали");
     }
 }

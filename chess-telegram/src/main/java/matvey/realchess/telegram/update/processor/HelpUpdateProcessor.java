@@ -10,9 +10,12 @@ public class HelpUpdateProcessor extends UpdateProcessor {
     }
 
     @Override
-    public void process(Update update) {
-        if (isCommand(update, "help")) {
-            respond(update.getMessage(), "Real chess help");
-        }
+    protected boolean applies(Update update) {
+        return isCommand(update, "help");
+    }
+
+    @Override
+    protected void doProcess(Update update) {
+        sendText(update.getMessage(), "Real chess help");
     }
 }

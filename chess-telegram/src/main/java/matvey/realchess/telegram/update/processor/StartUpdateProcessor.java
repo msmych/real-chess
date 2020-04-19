@@ -10,12 +10,15 @@ public class StartUpdateProcessor extends UpdateProcessor {
     }
 
     @Override
-    public void process(Update update) {
-        if (isCommand(update, "start")) {
-            respond(update.getMessage(), """
-                    Hey
-                    I am real chess
-                    """);
-        }
+    protected boolean applies(Update update) {
+        return isCommand(update, "start");
+    }
+
+    @Override
+    protected void doProcess(Update update) {
+        sendText(update.getMessage(), """
+                Hey
+                I am real chess
+                """);
     }
 }

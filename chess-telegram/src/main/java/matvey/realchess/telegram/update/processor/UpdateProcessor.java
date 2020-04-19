@@ -8,19 +8,29 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.function.Predicate;
+
 public abstract class UpdateProcessor {
 
     protected static final Logger log = LoggerFactory.getLogger(UpdateProcessor.class);
 
     protected final TelegramLongPollingBot bot;
 
-    protected UpdateProcessor(TelegramLongPollingBot bot) {
+    public UpdateProcessor(TelegramLongPollingBot bot) {
         this.bot = bot;
     }
 
-    public abstract void process(Update update);
+    public final void process(Update update) {
+        if (applies(update)) {
+            doProcess(update);
+        }
+    }
 
-    protected final boolean isCommand(Update update, String command) {
+    protected abstract boolean applies(Update update);
+
+    protected abstract void doProcess(Update update);
+
+    protected final boolean hasTextSuchThat(Update update, Predicate<String> predicate) {
         if (!update.hasMessage()) {
             return false;
         }
@@ -28,20 +38,26 @@ public abstract class UpdateProcessor {
         if (!message.hasText()) {
             return false;
         }
-        var text = message.getText();
-        if (command.startsWith("/")) {
-            command = command.substring(1);
-        }
-        return text.equals("/" + command) ||
-                text.equals("/" + command + "@" + bot.getBotUsername());
+        return predicate.test(message.getText());
     }
 
-    protected final Message respond(Message message, String text) {
+    protected final boolean isCommand(Update update, String command) {
+        var commandText = command.startsWith("/") ? command.substring(1) : command;
+        return hasTextSuchThat(update,
+                text -> text.equals("/" + commandText) ||
+                        text.equals("/" + commandText + "@" + bot.getBotUsername()));
+    }
+
+    protected final Message sendMessage(SendMessage sendMessage) {
         try {
-            return bot.execute(new SendMessage(message.getChatId(), text));
+            return bot.execute(sendMessage);
         } catch (TelegramApiException e) {
             log.error("Could not respond to message", e);
             throw new RuntimeException(e);
         }
+    }
+
+    protected final Message sendText(Message message, String text) {
+        return sendMessage(new SendMessage(message.getChatId(), text));
     }
 }
