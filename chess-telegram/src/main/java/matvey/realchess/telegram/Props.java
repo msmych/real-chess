@@ -3,7 +3,6 @@ package matvey.realchess.telegram;
 import matvey.realchess.Board;
 import matvey.realchess.piece.Piece;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.io.IOException;
@@ -25,7 +24,7 @@ public final class Props {
         }
     }
 
-    public ReplyKeyboard chessKeyboard(Board board) {
+    public InlineKeyboardMarkup chessKeyboard(Board board) {
         return new InlineKeyboardMarkup(
                 rangeClosed(1, 8)
                         .map(i -> 8 - i + '1')
@@ -46,5 +45,9 @@ public final class Props {
                                         .setCallbackData(position))
                                 .collect(toList()))
                         .collect(toList()));
+    }
+
+    public String color(Piece.Color color) {
+        return color == Piece.Color.WHITE ? properties.getProperty("sl") : properties.getProperty("sd");
     }
 }

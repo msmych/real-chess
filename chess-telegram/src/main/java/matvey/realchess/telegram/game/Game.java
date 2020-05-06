@@ -25,4 +25,12 @@ public record Game(Optional<Player>whitePlayer,
             return new Game(empty(), Optional.of(new Player(userId, messageId)), board);
         }
     }
+
+    public Game withPlayer2(int userId, int messageId) {
+        if (whitePlayer.isEmpty()) {
+            return new Game(Optional.of(new Player(userId, messageId)), blackPlayer, board);
+        } else {
+            return new Game(whitePlayer, Optional.of(new Player(userId, messageId)), board);
+        }
+    }
 }

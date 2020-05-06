@@ -4,10 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.Serializable;
 import java.util.function.Predicate;
 
 public abstract class UpdateProcessor {
@@ -52,12 +54,21 @@ public abstract class UpdateProcessor {
         try {
             return bot.execute(sendMessage);
         } catch (TelegramApiException e) {
-            log.error("Could not respond to message", e);
+            log.error("Could not send message", e);
             throw new RuntimeException(e);
         }
     }
 
     protected final Message sendText(Message message, String text) {
         return sendMessage(new SendMessage(message.getChatId(), text));
+    }
+
+    protected final Serializable updateMessage(EditMessageText editMessage) {
+        try {
+            return bot.execute(editMessage);
+        } catch (TelegramApiException e) {
+            log.error("Could not update message", e);
+            throw new RuntimeException(e);
+        }
     }
 }
