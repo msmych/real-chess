@@ -10,7 +10,7 @@ public class StartUpdateProcessor extends UpdateProcessor {
     }
 
     @Override
-    protected boolean applies(Update update) {
+    protected boolean appliesTo(Update update) {
         return isCommand(update, "start");
     }
 

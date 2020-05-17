@@ -1,6 +1,6 @@
 package matvey.realchess.telegram.update.processor;
 
-import matvey.realchess.telegram.Props;
+import matvey.realchess.telegram.TelegramChessProps;
 import matvey.realchess.telegram.datasource.ChessDataSource;
 import matvey.realchess.telegram.game.Game;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -14,16 +14,16 @@ import static matvey.realchess.telegram.game.Game.startGame;
 public class GameIdUpdateProcessor extends UpdateProcessor {
 
     private final ChessDataSource chessDataSource;
-    private final Props props;
+    private final TelegramChessProps telegramChessProps;
 
-    public GameIdUpdateProcessor(TelegramLongPollingBot bot, ChessDataSource chessDataSource, Props props) {
+    public GameIdUpdateProcessor(TelegramLongPollingBot bot, ChessDataSource chessDataSource, TelegramChessProps telegramChessProps) {
         super(bot);
         this.chessDataSource = chessDataSource;
-        this.props = props;
+        this.telegramChessProps = telegramChessProps;
     }
 
     @Override
-    protected boolean applies(Update update) {
+    protected boolean appliesTo(Update update) {
         return hasTextSuchThat(update, this::isGameIdCommand);
     }
 
@@ -45,8 +45,8 @@ public class GameIdUpdateProcessor extends UpdateProcessor {
         var message = update.getMessage();
         var gameId = Integer.parseUnsignedInt(message.getText().substring(1));
         var boardMessage = sendMessage(
-            new SendMessage(message.getChatId(), props.color(WHITE) + "'s move")
-                .setReplyMarkup(props.chessKeyboard(startGame().board())));
+            new SendMessage(message.getChatId(), telegramChessProps.color(WHITE) + "'s move")
+                .setReplyMarkup(telegramChessProps.whiteChess(startGame().board(), gameId)));
         chessDataSource.update(gameId, game -> game.withPlayer2(message.getFrom().getId(), boardMessage.getMessageId()));
         var opponentMessageId = chessDataSource.game(gameId)
             .flatMap(game -> game.whitePlayer().or(game::blackPlayer))
@@ -54,8 +54,8 @@ public class GameIdUpdateProcessor extends UpdateProcessor {
             .orElseThrow();
         updateMessage(new EditMessageText()
             .setMessageId(opponentMessageId)
-            .setText(props.color(WHITE) + "'s move")
-            .setReplyMarkup(props.chessKeyboard(startGame().board())));
+            .setText(telegramChessProps.color(WHITE) + "'s move")
+            .setReplyMarkup(telegramChessProps.whiteChess(startGame().board(), gameId)));
     }
 
 }

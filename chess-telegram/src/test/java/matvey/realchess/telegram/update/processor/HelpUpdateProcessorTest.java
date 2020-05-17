@@ -19,7 +19,7 @@ class HelpUpdateProcessorTest {
     @Test
     void should_send_greeting_on_start_command() throws TelegramApiException {
         var update = textUpdate("/help");
-        assertThat(updateProcessor.applies(update)).isTrue();
+        assertThat(updateProcessor.appliesTo(update)).isTrue();
         updateProcessor.doProcess(update);
         verify(bot).execute(any(SendMessage.class));
     }

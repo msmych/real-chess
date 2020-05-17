@@ -7,8 +7,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static java.util.Optional.empty;
 import static matvey.realchess.Board.initialBoard;
+import static matvey.realchess.piece.Piece.Color.WHITE;
 
-public record Game(Optional<Player>whitePlayer,
+public final record Game(Optional<Player>whitePlayer,
                    Optional<Player>blackPlayer,
                    Board board) {
 
@@ -32,5 +33,19 @@ public record Game(Optional<Player>whitePlayer,
         } else {
             return new Game(whitePlayer, Optional.of(new Player(userId, messageId)), board);
         }
+    }
+
+    public Optional<Player> currentPlayer() {
+        if (whitePlayer.isEmpty() || blackPlayer.isEmpty()) {
+            return empty();
+        }
+        return board.currentMove() == WHITE ? whitePlayer : blackPlayer;
+    }
+
+    public Optional<Player> waitingPlayer() {
+        if (whitePlayer.isEmpty() || blackPlayer.isEmpty()) {
+            return empty();
+        }
+        return board.currentMove() == WHITE ? blackPlayer : whitePlayer;
     }
 }

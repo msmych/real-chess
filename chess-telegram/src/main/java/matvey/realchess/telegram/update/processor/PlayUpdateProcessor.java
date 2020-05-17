@@ -1,6 +1,6 @@
 package matvey.realchess.telegram.update.processor;
 
-import matvey.realchess.telegram.Props;
+import matvey.realchess.telegram.TelegramChessProps;
 import matvey.realchess.telegram.datasource.ChessDataSource;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -14,16 +14,16 @@ import static matvey.realchess.telegram.game.Game.startGame;
 public class PlayUpdateProcessor extends UpdateProcessor {
 
     private final ChessDataSource chessDataSource;
-    private final Props props;
+    private final TelegramChessProps telegramChessProps;
 
-    public PlayUpdateProcessor(TelegramLongPollingBot bot, ChessDataSource chessDataSource, Props props) {
+    public PlayUpdateProcessor(TelegramLongPollingBot bot, ChessDataSource chessDataSource, TelegramChessProps telegramChessProps) {
         super(bot);
         this.chessDataSource = chessDataSource;
-        this.props = props;
+        this.telegramChessProps = telegramChessProps;
     }
 
     @Override
-    protected boolean applies(Update update) {
+    protected boolean appliesTo(Update update) {
         return isCommand(update, "play");
     }
 
@@ -35,7 +35,7 @@ public class PlayUpdateProcessor extends UpdateProcessor {
         sendText(message, "/" + id);
         var boardMessage = sendMessage(
                 new SendMessage(message.getChatId(), "Waiting for another player:")
-                        .setReplyMarkup(props.chessKeyboard(startGame().board())));
+                        .setReplyMarkup(telegramChessProps.whiteChess(startGame().board(), id)));
         chessDataSource.update(id,
                 game -> game.withPlayer1(message.getFrom().getId(), boardMessage.getMessageId()));
     }

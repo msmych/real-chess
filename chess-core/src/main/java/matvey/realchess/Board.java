@@ -78,6 +78,10 @@ public record Board(Map<Character, Map<Character, Square>>squares,
         return movesCount % 2 == 0 ? WHITE : BLACK;
     }
 
+    public Piece.Color waitingColor() {
+        return movesCount % 2 == 1 ? WHITE : BLACK;
+    }
+
     public Optional<Move.Result> move(String move) {
         return squareAt(move.substring(0, 2))
                 .move(this, squareAt(move.substring(2, 4)))

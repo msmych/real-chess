@@ -14,7 +14,7 @@ public class ChessBotApp {
     public static void main(String[] args) throws TelegramApiRequestException {
         ApiContextInitializer.init();
         new TelegramBotsApi().registerBot(
-                new ChessBot(args[0], new InMemoryChessDataSource(), new Props("chess.properties")));
+                new ChessBot(args[0], new InMemoryChessDataSource(), new TelegramChessProps("chess.properties")));
         log.info("Поехали");
     }
 }

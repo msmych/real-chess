@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -23,12 +24,12 @@ public abstract class UpdateProcessor {
     }
 
     public final void process(Update update) {
-        if (applies(update)) {
+        if (appliesTo(update)) {
             doProcess(update);
         }
     }
 
-    protected abstract boolean applies(Update update);
+    protected abstract boolean appliesTo(Update update);
 
     protected abstract void doProcess(Update update);
 
@@ -41,6 +42,17 @@ public abstract class UpdateProcessor {
             return false;
         }
         return predicate.test(message.getText());
+    }
+
+    protected final boolean hasCallbackQuerySuchThat(Update update, Predicate<CallbackQuery> predicate) {
+        if (!update.hasCallbackQuery()) {
+            return false;
+        }
+        return predicate.test(update.getCallbackQuery());
+    }
+
+    protected final boolean hasCallbackQueryDataSuchThat(Update update, Predicate<String> predicate) {
+        return hasCallbackQuerySuchThat(update, cq -> predicate.test(cq.getData()));
     }
 
     protected final boolean isCommand(Update update, String command) {

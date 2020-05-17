@@ -16,13 +16,14 @@ public class ChessBot extends TelegramLongPollingBot {
     private final String token;
     private final Set<UpdateProcessor> updateProcessors;
 
-    public ChessBot(String token, ChessDataSource chessDataSource, Props props) {
+    public ChessBot(String token, ChessDataSource chessDataSource, TelegramChessProps telegramChessProps) {
         this.token = token;
         this.updateProcessors = Set.of(
                 new StartUpdateProcessor(this),
                 new HelpUpdateProcessor(this),
-                new PlayUpdateProcessor(this, chessDataSource, props),
-                new GameIdUpdateProcessor(this, chessDataSource, props)
+                new PlayUpdateProcessor(this, chessDataSource, telegramChessProps),
+                new GameIdUpdateProcessor(this, chessDataSource, telegramChessProps),
+                new StartMoveUpdateProcessor(this, chessDataSource, telegramChessProps)
         );
     }
 

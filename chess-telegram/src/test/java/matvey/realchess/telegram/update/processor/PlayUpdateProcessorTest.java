@@ -1,6 +1,6 @@
 package matvey.realchess.telegram.update.processor;
 
-import matvey.realchess.telegram.Props;
+import matvey.realchess.telegram.TelegramChessProps;
 import matvey.realchess.telegram.datasource.ChessDataSource;
 import matvey.realchess.telegram.game.Game;
 import org.junit.jupiter.api.Test;
@@ -20,12 +20,12 @@ class PlayUpdateProcessorTest {
 
     private TelegramLongPollingBot bot = mock(TelegramLongPollingBot.class);
     private ChessDataSource dataSource = mock(ChessDataSource.class);
-    private PlayUpdateProcessor updateProcessor = new PlayUpdateProcessor(bot, dataSource, new Props("test.chess.properties"));
+    private PlayUpdateProcessor updateProcessor = new PlayUpdateProcessor(bot, dataSource, new TelegramChessProps("test.chess.properties"));
 
     @Test
     void should_create_game_and_send_id() throws TelegramApiException {
         var update = textUpdate("/play");
-        assertThat(updateProcessor.applies(update)).isTrue();
+        assertThat(updateProcessor.appliesTo(update)).isTrue();
         updateProcessor.doProcess(update);
         verify(bot, times(3)).execute(any(SendMessage.class));
         verify(dataSource).save(anyInt(), any(Game.class));
