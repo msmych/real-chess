@@ -10,8 +10,8 @@ import static matvey.realchess.Board.initialBoard;
 import static matvey.realchess.piece.Piece.Color.WHITE;
 
 public final record Game(Optional<Player>whitePlayer,
-                   Optional<Player>blackPlayer,
-                   Board board) {
+                         Optional<Player>blackPlayer,
+                         Board board) {
 
     public record Player(int userId, int messageId) { }
 
