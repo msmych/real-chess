@@ -52,7 +52,7 @@ public class StartMoveUpdateProcessor extends UpdateProcessor {
         if (parts[1].length() != 2) {
             return false;
         }
-        if (parts[1].charAt(0) < 'a' || parts[1].charAt(1) > 'h') {
+        if (parts[1].charAt(0) < 'a' || parts[1].charAt(0) > 'h') {
             return false;
         }
         if (parts[1].charAt(1) < '1' || parts[1].charAt(1) > '8') {
