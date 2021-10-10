@@ -1,35 +1,20 @@
 plugins {
     id "java"
-}
-
-sourceCompatibility = "14"
-
-repositories {
-    jcenter()
+    id "application"
 }
 
 dependencies {
-    compile project(":chess-core")
-}
-
-compileJava {
-    options.compilerArgs += ["--enable-preview"]
-}
-
-compileTestJava {
-    options.compilerArgs += ["--enable-preview"]
+    implementation project(":chess-core")
 }
 
 test {
     useJUnitPlatform()
-    jvmArgs "--enable-preview"
 }
 
-jar {
-    manifest {
-        attributes "Main-Class": "matvey.realchess.console.ConsoleChess"
-    }
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+application {
+    mainClass = "matvey.realchess.console.ConsoleChess"
+}
+
+run {
+    standardInput = System.in
 }
